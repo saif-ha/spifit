@@ -34,6 +34,13 @@
             <a href="logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
     </div>
+    <!-- Add this in the header section, next to the profile dropdown -->
+    <div class="cart-icon">
+        <a href="cart.php">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </a>
+    </div>
 </header>
 
 <style>
@@ -113,20 +120,32 @@
             <div class="product">
                 <img src="../images/Rectangle%20310.png" alt="Sport T-shirt" width="295" height="250">
                 <p>Sport T-shirt - 30Dt</p>
+                <button class="add-to-cart" data-product-id="1" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
                 <img src="../images/Rectangle%20310%20(1).png" height="250" width="295"/>
                 <p>Stringer Cutoffshirt - 30Dt</p>
+                <button class="add-to-cart" data-product-id="2" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
 
                 <img src="../images/Rectangle%20310%20(2).png" height="250" width="295"/>
                 <p>Jacket - 30Dt</p>
+                <button class="add-to-cart" data-product-id="3" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
 
                 <img src="../images/Rectangle%20310%20(3).png" height="250" width="295"/>
                 <p>Backpack - 30Dt</p>
+                <button class="add-to-cart" data-product-id="4" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -137,20 +156,32 @@
             <div class="category">
                 <img src="../images/Rectangle%20310%20(2).png" height="250" width="295"/>
                 <p>Jackets - 130Dt</p>
+                <button class="add-to-cart" data-product-id="5" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="category">
                 <img src="../images/Rectangle%20312.png" height="299" width="295"/>
                 <p>Shorts - 30Dt</p>
+                <button class="add-to-cart" data-product-id="6" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="category">
 
                 <img src="../images/Rectangle%20314.png" height="299" width="295"/>
                 <p>Leggings - 30Dt</p>
+                <button class="add-to-cart" data-product-id="7" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="category">
 
                 <img src="../images/Rectangle%20316.png" height="299" width="295"/>
                 <p>Stringers - 30Dt</p>
+                <button class="add-to-cart" data-product-id="8" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -162,21 +193,33 @@
 
                 <img src="../images/Rectangle%20318%20(2).png" height="299" width="295"/>
                 <p>Protein - 130Dt</p>
+                <button class="add-to-cart" data-product-id="9" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
 
                 <img src="../images/Rectangle%20319%20(2).png" height="299" width="295"/>
                 <p>Mass - 230Dt</p>
+                <button class="add-to-cart" data-product-id="10" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
 
                 <img src="../images/Rectangle%20320%20(2).png" height="299" width="295"/>
                 <p>Creatine - 120Dt</p>
+                <button class="add-to-cart" data-product-id="11" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
             <div class="product">
 
                 <img src="../images/Rectangle%20321%20(1).png" height="299" width="295"/>
                 <p>KL - 30Dt</p>
+                <button class="add-to-cart" data-product-id="12" data-product-name="Sport T-shirt" data-product-price="30">
+                    Add to Cart <i class="fas fa-cart-plus"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -226,5 +269,60 @@
         </div>
     </div>
 </footer>
+
+<!-- Add this before the closing </body> tag -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add to cart functionality
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const productId = this.dataset.productId;
+            const productName = this.dataset.productName;
+            const productPrice = this.dataset.productPrice;
+            
+            try {
+                const response = await fetch('add_to_cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: 1
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    updateCartCount(data.cart_count);
+                    alert('Product added to cart!');
+                } else {
+                    alert(data.message || 'Error adding product to cart');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error adding product to cart');
+            }
+        });
+    });
+
+    // Update cart count
+    function updateCartCount(count) {
+        const cartCount = document.querySelector('.cart-count');
+        cartCount.textContent = count;
+    }
+
+    // Initial cart count load
+    fetch('get_cart_count.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateCartCount(data.count);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
 </body>
 </html>
